@@ -33,7 +33,7 @@ class BookController extends Controller
             'year' => 'required',
         ]);
 
-        Book::create($request->all());
+        $book = Book::create($request->all());
 
         if ($request->input('authors'))
         {
@@ -41,18 +41,13 @@ class BookController extends Controller
             Book::authors()->attach($authors);
         }
 
-        $success = $id;
-
-        return [
-            'success' => $success
-        ];
-
+        return new BookResource($book);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int  $book
      * @return \Illuminate\Http\Response
      */
     public function show(Book $book)
@@ -75,7 +70,7 @@ class BookController extends Controller
             'year' => 'required',
         ]);
 
-        $success = $book->update($request->only([
+        $book->update($request->only([
             'title',
             'description',
             'pages_count',
@@ -87,12 +82,10 @@ class BookController extends Controller
         if ($request->input('authors'))
         {
             $authors = $request->input('authors');
-            $success = $book->authors()->attach($authors);
+            $book = $book->authors()->attach($authors);
         }
 
-        return [
-            'success' => $success
-        ];
+        return new BookResource($book);
     }
 
     /**

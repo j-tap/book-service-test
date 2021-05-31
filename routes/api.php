@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\http\Controllers\BookController;
+use App\http\Controllers\AuthorController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,3 +23,4 @@ use App\http\Controllers\BookController;
 // });
 
 Route::apiResource('books', BookController::class);
+Route::apiResource('authors', AuthorController::class);
