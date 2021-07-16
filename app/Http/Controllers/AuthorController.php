@@ -44,7 +44,7 @@ class AuthorController extends Controller
      * @param  int  $author
      * @return \Illuminate\Http\Response
      */
-    public function show($author)
+    public function show(Author $author)
     {
         return new AuthorResource(Author::findOrFail($author['id']));
     }
@@ -56,9 +56,22 @@ class AuthorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Author $author)
     {
-        //
+        request()->validate([
+            'first_name' => 'required|max:100',
+            'last_name' => 'required|max:100',
+            'birthday' => 'date',
+        ]);
+
+        $author->update($request->only([
+            'first_name',
+            'last_name',
+            'birthday',
+            'description',
+        ]));
+
+        return new AuthorResource($author);
     }
 
     /**
@@ -67,8 +80,16 @@ class AuthorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Author $author)
     {
-        //
+        $success = $author->delete();
+        if ($success)
+        {
+            $success = $author->authors()->detach();
+        }
+
+        return [
+            'success' => $success
+        ];
     }
 }

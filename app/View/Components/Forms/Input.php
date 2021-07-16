@@ -7,6 +7,7 @@ use Illuminate\View\Component;
 class Input extends Component
 {
     public $name;
+    public $value;
     public $validation;
     public $label;
     public $type;
@@ -16,9 +17,10 @@ class Input extends Component
      *
      * @return void
      */
-    public function __construct($name, $validation, $type = 'text')
+    public function __construct($name, $value, $validation, $type = 'text')
     {
         $this->name = $name;
+        $this->value = $value;
         $this->validation = $validation;
         $this->type = $type;
         $this->label = ucfirst(str_replace('_', ' ', $name));

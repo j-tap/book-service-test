@@ -1,5 +1,5 @@
 <div {{ $attributes }}>
     <label for="field-{{ $name }}" class="form-label">{{ $label }}</label>
-    <textarea v-model="{{ $value }}" name="{{ $name }}" class="form-control" :class="{'is-invalid': errorsValidation.{{ $name }}}" id="field-{{ $name }}" placeholder=""></textarea>
+    <input v-model="{{ $value }}" name="{{ $name }}" type="date" class="form-control" :class="{'is-invalid': errorsValidation.{{ $name }}}" id="field-{{ $name }}" placeholder=" ">
     <div v-show="{{ $validation }}" class="invalid-feedback" v-html="{{ $validation }}"></div>
 </div>

@@ -7,6 +7,7 @@ use Illuminate\View\Component;
 class Select extends Component
 {
     public $name;
+    public $value;
     public $validation;
     public $items;
     public $label;
@@ -17,9 +18,10 @@ class Select extends Component
      *
      * @return void
      */
-    public function __construct($name, $validation, $items, $multiple = null)
+    public function __construct($name, $value, $validation, $items, $multiple = null)
     {
         $this->name = $name;
+        $this->value = $value;
         $this->validation = $validation;
         $this->items = $items;
         $this->multiple = $multiple ? 'multiple' : '';

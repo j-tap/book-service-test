@@ -4,7 +4,7 @@ namespace App\View\Components\Forms;
 
 use Illuminate\View\Component;
 
-class Textarea extends Component
+class Date extends Component
 {
     public $name;
     public $value;
@@ -31,6 +31,6 @@ class Textarea extends Component
      */
     public function render()
     {
-        return view('components.forms.textarea');
+        return view('components.forms.date');
     }
 }

@@ -27,18 +27,39 @@
 
     <div class="row my-3">
         <div class="col-12">
-            <div class="btn-toolbar" role="toolbar">
-                <div class="btn-group me-2" role="group">
-                    <button type="button" class="btn btn-dark" @click.stop="sendRequest('books')">Show Books</button>
+            <ul class="nav nav-tabs mb-3" id="modelManageTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="booksTab-tab" data-bs-toggle="tab" data-bs-target="#booksTab" type="button" role="tab" aria-controls="booksTab" aria-selected="true">Books</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="authorTab-tab" data-bs-toggle="tab" data-bs-target="#authorTab" type="button" role="tab" aria-controls="authorTab" aria-selected="false">Authors</button>
+                </li>
+            </ul>
+            <div class="tab-content" id="modelManageTabsContent">
+                <div class="tab-pane fade show active" id="booksTab" role="tabpanel" aria-labelledby="booksTab-tab">
+                    <div class="btn-toolbar" role="toolbar">
+                        <div class="input-group me-2">
+                            <button type="button" class="btn btn-dark" @click.stop="sendRequest(`books/${showBookId}`)">Show Books / Book #</button>
+                            <input v-model="showBookId" type="number" class="form-control" style="width:80px">
+                        </div>
+                        <div class="btn-group me-2" role="group">
+                            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#createBookModal">Create/Edit Book</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="input-group me-2">
-                    <button type="button" class="btn btn-dark" @click.stop="sendRequest(`books/${showBookId}`)">Show Book #</button>
-                    <input v-model="showBookId" type="number" class="form-control" style="width:80px">
-                </div>
-                <div class="btn-group me-2" role="group">
-                    <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#createBookModal">Create Book</button>
+                <div class="tab-pane fade" id="authorTab" role="tabpanel" aria-labelledby="authorTab-tab">
+                    <div class="btn-toolbar" role="toolbar">
+                        <div class="input-group me-2">
+                            <button type="button" class="btn btn-dark" @click.stop="sendRequest(`authors/${showAuthorId}`)">Show Authors / Author #</button>
+                            <input v-model="showAuthorId" type="number" class="form-control" style="width:80px">
+                        </div>
+                        <div class="btn-group me-2" role="group">
+                            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#createAuthorModal">Create/Edit Author</button>
+                        </div>
+                    </div>
                 </div>
             </div>
+
             <div class="alert alert-danger mt-2" role="alert" v-show="apiError" v-html="apiError"></div>
             <div class="card mt-3">
                 <div class="card-header">
@@ -53,11 +74,18 @@
     </div>
 
     <x-modal name="createBookModal" title="Book" success-event="sendRequest('books', 'POST', book)">
-        <x-forms.input name="title" validation="errorsValidation.title" class="mb-2"/>
-        <x-forms.input name="year" validation="errorsValidation.year" type="number" class="mb-2"/>
-        <x-forms.input name="pages_count" validation="errorsValidation.pages_count" class="mb-2"/>
-        <x-forms.textarea name="description" validation="errorsValidation.description" class="mb-2"/>
-        <x-forms.select name="authors" validation="errorsValidation.authors" items="authors.items" multiple class="mb-2"/>
+        <x-forms.input name="title" value="book.title" validation="errorsValidation.title" class="mb-2"/>
+        <x-forms.input name="year" value="book.year" validation="errorsValidation.year" type="number" class="mb-2"/>
+        <x-forms.input name="pages_count" value="book.pages_count" validation="errorsValidation.pages_count" class="mb-2"/>
+        <x-forms.textarea name="description" value="book.description" validation="errorsValidation.description" class="mb-2"/>
+        <x-forms.select name="authors" value="book.authors" validation="errorsValidation.authors" items="authors.items" multiple class="mb-2"/>
+    </x-modal>
+
+    <x-modal name="createAuthorModal" title="Author" success-event="sendRequest('authors', 'POST', author)">
+        <x-forms.input name="first_name" value="author.first_name" validation="errorsValidation.first_name" class="mb-2"/>
+        <x-forms.input name="last_name" value="author.last_name" validation="errorsValidation.last_name" class="mb-2"/>
+        <x-forms.date name="birthday" value="author.birthday" validation="errorsValidation.birthday" class="mb-2"/>
+        <x-forms.textarea name="description" value="author.description" validation="errorsValidation.description" class="mb-2"/>
     </x-modal>
 </div>
 @endsection
@@ -70,8 +98,10 @@ const App = {
             apiError: null,
             apiResult: null,
 
-            showBookId: 1,
             errorsValidation: {},
+
+            showBookId: '',
+            showAuthorId: '',
 
             book: {
                 title: null,
@@ -79,6 +109,12 @@ const App = {
                 year: null,
                 description: null,
                 authors: [],
+            },
+            author: {
+                first_name: null,
+                last_name: null,
+                description: null,
+                birthday: null,
             },
 
             authors: {
@@ -98,10 +134,14 @@ const App = {
     },
 
     mounted() {
-        this.fetchAuthors()
-        this.$refs.createBookModal.addEventListener('hidden.bs.modal', () => {
-            this.clearFormModal();
-        });
+        this.$refs.createBookModal
+            .addEventListener('show.bs.modal', () => {
+                this.fetchAuthors()
+            });
+        this.$refs.createBookModal
+            .addEventListener('hidden.bs.modal', () => {
+                this.clearFormModal();
+            });
     },
 
     methods: {
