@@ -3,7 +3,7 @@
 @section('title', config('app.name'))
 
 @section('content')
-<div class="container">
+<div id="app" class="container">
     <div class="row my-3">
         <div class="col-12">
             <div class="card">
@@ -27,62 +27,47 @@
 
     <div class="row my-3">
         <div class="col-12">
-            <div id="app">
-                <div class="btn-toolbar" role="toolbar">
-                    <div class="btn-group me-2" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-dark" @click.stop="sendRequest('books')">Show Books</button>
-                    </div>
-                    <div class="input-group me-2">
-                        <button type="button" class="btn btn-dark" @click.stop="sendRequest(`books/${showBookId}`)">Show Book #</button>
-                        <input v-model="showBookId" type="number" class="form-control" style="width:80px">
-                    </div>
-                    <div class="btn-group me-2" role="group" aria-label="Basic example">
-                        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#createBookModal">Create Book</button>
-                        <div class="modal fade" id="createBookModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Book</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="mb-2">
-                                            <input v-model="book.title" type="text" class="form-control" placeholder="Title">
-                                        </div>
-                                        <div class="mb-2">
-                                            <input v-model="book.pages_count" type="number" class="form-control" placeholder="Pages count">
-                                        </div>
-                                        <div class="mb-2">
-                                            <input v-model="book.year" type="number" class="form-control" placeholder="Year">
-                                        </div>
-                                        <div class="mb-2">
-                                            <textarea v-model="book.description" class="form-control" placeholder="Description"></textarea>
-                                        </div>
-                                        <div class="mb-2">
-                                            <select v-model="book.authors" class="form-select" aria-label="Authors" placeholder="Authors">
-                                                <option value="1">One</option>
-                                                <option value="2">Two</option>
-                                                <option value="3">Three</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-primary">Save</button>
-                                    </div>
-                                </div>
-                            </div>
-                         </div>
-                    </div>
+            <div class="btn-toolbar" role="toolbar">
+                <div class="btn-group me-2" role="group">
+                    <button type="button" class="btn btn-dark" @click.stop="sendRequest('books')">Show Books</button>
                 </div>
-                <div class="alert alert-danger mt-2" role="alert" v-show="apiError" v-html="apiError"></div>
-                <div class="card mt-3">
-                    <div class="card-header">
-                        <span>Result</span>
-                        <button type="button" class="btn btn-outline-dark btn-sm float-end" @click.stop="print()">&times;</button>
-                    </div>
-                    <div class="card-body">
-                        <pre><code v-html="apiResult" style="white-space:pre"></code></pre>
-                    </div>
+                <div class="input-group me-2">
+                    <button type="button" class="btn btn-dark" @click.stop="sendRequest(`books/${showBookId}`)">Show Book #</button>
+                    <input v-model="showBookId" type="number" class="form-control" style="width:80px">
+                </div>
+                <div class="btn-group me-2" role="group">
+                    <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#createBookModal">Create Book</button>
+                </div>
+            </div>
+            <div class="alert alert-danger mt-2" role="alert" v-show="apiError" v-html="apiError"></div>
+            <div class="card mt-3">
+                <div class="card-header">
+                    <span>Result</span>
+                    <button type="button" class="btn btn-outline-dark btn-sm float-end" @click.stop="print()">&times;</button>
+                </div>
+                <div class="card-body">
+                    <pre><code v-html="apiResult" style="white-space:pre"></code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="createBookModal" ref="createBookModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Book</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <x-forms.input name="title" validation="errorsValidation.title" class="mb-2"/>
+                    <x-forms.input name="year" validation="errorsValidation.year" type="number" class="mb-2"/>
+                    <x-forms.input name="pages_count" validation="errorsValidation.pages_count" class="mb-2"/>
+                    <x-forms.textarea name="description" validation="errorsValidation.description" class="mb-2"/>
+                    <x-forms.select name="authors" validation="errorsValidation.authors" items="authors.items" multiple class="mb-2"/>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" @click.stop="sendRequest('books', 'POST', book)">Save</button>
                 </div>
             </div>
         </div>
@@ -99,6 +84,7 @@ const App = {
             apiResult: null,
 
             showBookId: 1,
+            errorsValidation: {},
 
             book: {
                 title: null,
@@ -107,29 +93,119 @@ const App = {
                 description: null,
                 authors: [],
             },
+
+            authors: {
+                list: [],
+                items: [],
+            },
         }
     },
+
+    watch: {
+        'authors.list': function(val) {
+            const authors = val
+                .map(o => ({ value: o.id, text: `${o.first_name} ${o.last_name}` }));
+            this.authors.items = authors;
+        },
+
+    },
+
+    mounted() {
+        this.fetchAuthors()
+        this.$refs.createBookModal.addEventListener('hidden.bs.modal', () => {
+            this.clearFormModal();
+        });
+    },
+
     methods: {
-        async sendRequest(path, method = 'GET', head = {}, params = null) {
-            this.apiError = null;
-            const headers = new Headers(head);
-            const requestParams = { method, headers }
-            if (params) requestParams.body = JSON.stringify(params);
-
-            const response = await fetch(`/api/${path}`, requestParams);
-
-            if (response.status === 200) {
-                const data = await response.json();
-                this.print(JSON.stringify(data, null, 4));
-            } else {
-                this.apiError = `${response.status} ${response.statusText}`;
-                this.print();
-            }
+        printError(text = '') {
+            this.apiError = text
         },
 
         print(text = null) {
             this.apiResult = text;
         },
+
+        clearFormModal() {
+            const fields = this.$refs.createBookModal.querySelectorAll('[name]');
+            for (let field of fields) {
+                field.value = null;
+            }
+        },
+
+        async fetchAuthors() {
+            const authors = await this.send('authors');
+            this.authors.list = authors.data;
+        },
+
+        async sendRequest(path, method, params, head) {
+            this.errorsValidation = {};
+            const result = await this.send(path, method, params, head)
+            this.clearFormModal();
+            this.printError(result.error || '');
+            this.print(JSON.stringify(result.data, null, 4));
+        },
+
+        async send(path, method, params, head) {
+            this.apiError = null;
+            let data = null;
+            let error = null;
+            let resp = null;
+            const successCodes = [200, 201];
+
+            try {
+                const response = await this.fetchApi(path, method, params, head);
+                const resp = await response.json();
+
+                if (resp.data) {
+                    data = resp.data;
+                } else {
+                    if (resp.message) {
+                        error = resp.message
+                        if (resp.errors) this.errorsValidation = resp.errors
+                    } else {
+                        error = `${resp.status} ${resp.statusText}`;
+                    }
+                }
+                // if (successCodes.includes(resp.status)) {
+                //     data = resp.data;
+                // } else {
+                //     if (resp.message) {
+                //         error = resp.message
+                //         if (resp.errors) this.errorsValidation = resp.errors
+                //     } else {
+                //         error = `${resp.status} ${resp.statusText}`;
+                //     }
+                // }
+            } catch (err) {
+                if (err.response && err.response.data && err.response.data.message) {
+                    error = err.response.data.message
+                } else {
+                    error = `${err.name}: ${err.message}`
+                }
+            }
+            return { data, error }
+        },
+
+        async fetchApi(path, method = 'GET', params = null, head = {}) {
+            const headers = new Headers({
+                ...{
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json;charset=UTF-8',
+                    'Content-Length': 2447,
+                },
+                ...head,
+            });
+            const requestParams = {
+                method,
+                headers,
+            }
+            if (params) requestParams.body = JSON.stringify(params);
+
+            const result = await fetch(`/api/${path}`, requestParams);
+            return result
+        },
+
     },
 }
 Vue.createApp(App).mount('#app');

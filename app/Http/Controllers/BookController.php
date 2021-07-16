@@ -38,7 +38,7 @@ class BookController extends Controller
         if ($request->input('authors'))
         {
             $authors = $request->input('authors');
-            Book::authors()->attach($authors);
+            $book->authors()->attach($authors);
         }
 
         return new BookResource($book);
