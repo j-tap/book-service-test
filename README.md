@@ -21,3 +21,27 @@
 - `php artisan test` запуск тестов
 
 > Проверить API можно встроенным интерфейсом на главной сранице
+
+<details>
+    <summary>Подсказки по коммандам</summary>
+    ```
+        // Генерация компонентов шаблонов
+        php artisan make:component Page
+        php artisan make:component Forms/Input
+
+        // Генерация коллекций
+        php artisan make:resource AuthorCollection
+
+        // Генерация контроллера, ключ --api генерит контроллер с шаблоном для работы API
+        php artisan make:controller BookReviewController --api
+
+        // Генерация файла модели, ключи: -m - миграции, -f - фабрики -c - контроллера, -s - сидинг
+        // Возможно указание нескольких ключей: -mfc
+        php artisan make:model BookReviews -m
+
+        // Миграция с очисткой
+        php artisan migrate:fresh
+        // Миграция одной таблицы
+        php artisan make:migration create_autor_to_book_table
+    ```
+</details>

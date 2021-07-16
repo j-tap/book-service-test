@@ -52,26 +52,13 @@
         </div>
     </div>
 
-    <div class="modal fade" id="createBookModal" ref="createBookModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Book</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <x-forms.input name="title" validation="errorsValidation.title" class="mb-2"/>
-                    <x-forms.input name="year" validation="errorsValidation.year" type="number" class="mb-2"/>
-                    <x-forms.input name="pages_count" validation="errorsValidation.pages_count" class="mb-2"/>
-                    <x-forms.textarea name="description" validation="errorsValidation.description" class="mb-2"/>
-                    <x-forms.select name="authors" validation="errorsValidation.authors" items="authors.items" multiple class="mb-2"/>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" @click.stop="sendRequest('books', 'POST', book)">Save</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <x-modal name="createBookModal" title="Book" success-event="sendRequest('books', 'POST', book)">
+        <x-forms.input name="title" validation="errorsValidation.title" class="mb-2"/>
+        <x-forms.input name="year" validation="errorsValidation.year" type="number" class="mb-2"/>
+        <x-forms.input name="pages_count" validation="errorsValidation.pages_count" class="mb-2"/>
+        <x-forms.textarea name="description" validation="errorsValidation.description" class="mb-2"/>
+        <x-forms.select name="authors" validation="errorsValidation.authors" items="authors.items" multiple class="mb-2"/>
+    </x-modal>
 </div>
 @endsection
 
