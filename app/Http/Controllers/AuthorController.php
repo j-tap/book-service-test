@@ -85,11 +85,13 @@ class AuthorController extends Controller
         $success = $author->delete();
         if ($success)
         {
-            $success = $author->authors()->detach();
+            $success = $author->books()->detach();
         }
 
         return [
-            'success' => $success
+            'data' => [
+                'success' => $success,
+            ]
         ];
     }
 }

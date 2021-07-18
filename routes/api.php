@@ -22,5 +22,7 @@ use App\http\Controllers\AuthorController;
 //     return $request->user();
 // });
 
-Route::apiResource('books', BookController::class);
-Route::apiResource('authors', AuthorController::class);
+Route::apiResources([
+    'books' => BookController::class,
+    'authors' => AuthorController::class,
+]);

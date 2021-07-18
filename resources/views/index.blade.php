@@ -38,23 +38,45 @@
             <div class="tab-content" id="modelManageTabsContent">
                 <div class="tab-pane fade show active" id="booksTab" role="tabpanel" aria-labelledby="booksTab-tab">
                     <div class="btn-toolbar" role="toolbar">
-                        <div class="input-group me-2">
-                            <button type="button" class="btn btn-dark" @click.stop="sendRequest(`books/${showBookId}`)">Show Books / Book #</button>
-                            <input v-model="showBookId" type="number" class="form-control" style="width:80px">
+                        <div class="btn-group me-2" role="group">
+                            <button type="button" class="btn btn-dark" @click.stop="createEntity('book')">Create Book</button>
                         </div>
                         <div class="btn-group me-2" role="group">
-                            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#createBookModal">Create/Edit Book</button>
+                            <button type="button" class="btn btn-dark" @click.stop="editEntity('book')">Edit Book</button>
+                            <input v-model="book.editId" type="number" class="form-control" style="width:80px">
+                        </div>
+                        <div class="btn-group me-2" role="group">
+                            <button type="button" class="btn btn-dark" @click.stop="sendRequest(pathes.book)">Show all Books</button>
+                        </div>
+                        <div class="input-group me-2">
+                            <button type="button" class="btn btn-dark" @click.stop="sendRequest(`${pathes.book}/${book.showId}`)">Show Book #</button>
+                            <input v-model="book.showId" type="number" class="form-control" style="width:80px">
+                        </div>
+                        <div class="input-group me-2">
+                            <button type="button" class="btn btn-dark" @click.stop="deleteEntity('book')">Delete Book #</button>
+                            <input v-model="book.deleteId" type="number" class="form-control" style="width:80px">
                         </div>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="authorTab" role="tabpanel" aria-labelledby="authorTab-tab">
                     <div class="btn-toolbar" role="toolbar">
-                        <div class="input-group me-2">
-                            <button type="button" class="btn btn-dark" @click.stop="sendRequest(`authors/${showAuthorId}`)">Show Authors / Author #</button>
-                            <input v-model="showAuthorId" type="number" class="form-control" style="width:80px">
+                        <div class="btn-group me-2" role="group">
+                            <button type="button" class="btn btn-dark" @click.stop="createEntity('author')">Create Author</button>
                         </div>
                         <div class="btn-group me-2" role="group">
-                            <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#createAuthorModal">Create/Edit Author</button>
+                            <button type="button" class="btn btn-dark" @click.stop="editEntity('author')">Edit Author</button>
+                            <input v-model="author.editId" type="number" class="form-control" style="width:80px">
+                        </div>
+                        <div class="btn-group me-2" role="group">
+                            <button type="button" class="btn btn-dark" @click.stop="sendRequest(pathes.author)">Show all Authors</button>
+                        </div>
+                        <div class="input-group me-2">
+                            <button type="button" class="btn btn-dark" @click.stop="sendRequest(`${pathes.author}/${author.showId}`)">Show Author #</button>
+                            <input v-model="author.showId" type="number" class="form-control" style="width:80px">
+                        </div>
+                        <div class="input-group me-2">
+                            <button type="button" class="btn btn-dark" @click.stop="deleteEntity('author')">Delete Author #</button>
+                            <input v-model="author.deleteId" type="number" class="form-control" style="width:80px">
                         </div>
                     </div>
                 </div>
@@ -73,19 +95,19 @@
         </div>
     </div>
 
-    <x-modal name="createBookModal" title="Book" success-event="sendRequest('books', 'POST', book)">
-        <x-forms.input name="title" value="book.title" validation="errorsValidation.title" class="mb-2"/>
-        <x-forms.input name="year" value="book.year" validation="errorsValidation.year" type="number" class="mb-2"/>
-        <x-forms.input name="pages_count" value="book.pages_count" validation="errorsValidation.pages_count" class="mb-2"/>
-        <x-forms.textarea name="description" value="book.description" validation="errorsValidation.description" class="mb-2"/>
-        <x-forms.select name="authors" value="book.authors" validation="errorsValidation.authors" items="authors.items" multiple class="mb-2"/>
+    <x-modal name="createBookModal" title="Book" success-event="saveBtn('book')">
+        <x-forms.input name="title" value="book.model.title" validation="errorsValidation.title" class="mb-2"/>
+        <x-forms.input name="year" value="book.model.year" validation="errorsValidation.year" type="number" class="mb-2"/>
+        <x-forms.input name="pages_count" value="book.model.pages_count" validation="errorsValidation.pages_count" class="mb-2"/>
+        <x-forms.textarea name="description" value="book.model.description" validation="errorsValidation.description" class="mb-2"/>
+        <x-forms.select name="authors" value="book.model.authors" validation="errorsValidation.authors" items="author.items" multiple class="mb-2"/>
     </x-modal>
 
-    <x-modal name="createAuthorModal" title="Author" success-event="sendRequest('authors', 'POST', author)">
-        <x-forms.input name="first_name" value="author.first_name" validation="errorsValidation.first_name" class="mb-2"/>
-        <x-forms.input name="last_name" value="author.last_name" validation="errorsValidation.last_name" class="mb-2"/>
-        <x-forms.date name="birthday" value="author.birthday" validation="errorsValidation.birthday" class="mb-2"/>
-        <x-forms.textarea name="description" value="author.description" validation="errorsValidation.description" class="mb-2"/>
+    <x-modal name="createAuthorModal" title="Author" success-event="saveBtn('author')">
+        <x-forms.input name="first_name" value="author.model.first_name" validation="errorsValidation.first_name" class="mb-2"/>
+        <x-forms.input name="last_name" value="author.model.last_name" validation="errorsValidation.last_name" class="mb-2"/>
+        <x-forms.date name="birthday" value="author.model.birthday" validation="errorsValidation.birthday" class="mb-2"/>
+        <x-forms.textarea name="description" value="author.model.description" validation="errorsValidation.description" class="mb-2"/>
     </x-modal>
 </div>
 @endsection
@@ -100,35 +122,55 @@ const App = {
 
             errorsValidation: {},
 
-            showBookId: '',
-            showAuthorId: '',
+            pathes: {
+                book: 'books',
+                author: 'authors',
+            },
+
+            isEditModal: false,
 
             book: {
-                title: null,
-                pages_count: 0,
-                year: null,
-                description: null,
-                authors: [],
-            },
-            author: {
-                first_name: null,
-                last_name: null,
-                description: null,
-                birthday: null,
-            },
-
-            authors: {
+                showId: 0,
+                editId: 0,
+                deleteId: 0,
+                model: {
+                    title: null,
+                    pages_count: 0,
+                    year: null,
+                    description: null,
+                    authors: [],
+                },
                 list: [],
                 items: [],
             },
+            author: {
+                showId: 0,
+                editId: 0,
+                deleteId: 0,
+                model: {
+                    first_name: null,
+                    last_name: null,
+                    description: null,
+                    birthday: null,
+                },
+                list: [],
+                items: [],
+            },
+
         }
     },
 
     watch: {
-        'authors.list': function(val) {
-            const authors = val
+        'author.list': function(val) {
+            const result = val
                 .map(o => ({ value: o.id, text: `${o.first_name} ${o.last_name}` }));
-            this.authors.items = authors;
+            this.author.items = result;
+        },
+
+        'book.list': function(val) {
+            const result = val
+                .map(o => ({ value: o.id, text: o.title }));
+            this.book.items = result;
         },
 
     },
@@ -136,11 +178,21 @@ const App = {
     mounted() {
         this.$refs.createBookModal
             .addEventListener('show.bs.modal', () => {
-                this.fetchAuthors()
+                this.fetchEntity('book')
+                this.fetchEntity('author')
             });
         this.$refs.createBookModal
             .addEventListener('hidden.bs.modal', () => {
-                this.clearFormModal();
+                this.clearFormModal('book');
+            });
+
+        this.$refs.createAuthorModal
+            .addEventListener('show.bs.modal', () => {
+                this.fetchEntity('author')
+            });
+        this.$refs.createAuthorModal
+            .addEventListener('hidden.bs.modal', () => {
+                this.clearFormModal('author');
             });
     },
 
@@ -153,24 +205,62 @@ const App = {
             this.apiResult = text;
         },
 
-        clearFormModal() {
-            const fields = this.$refs.createBookModal.querySelectorAll('[name]');
-            for (let field of fields) {
-                field.value = null;
+        clearFormModal(type) {
+            Object.assign(this.$data[type].model, this.$options.data.call(this)[type].model)
+        },
+
+        async fetchEntity(type) {
+            const resp = await this.send(this.pathes[type]);
+            this[type].list = resp.data;
+        },
+
+        createEntity(type) {
+            const name = type.charAt(0).toUpperCase() + type.slice(1);
+            const modal = new bootstrap.Modal(this.$refs[`create${name}Modal`], { keyboard: false })
+            modal.show();
+            this.isEditModal = false;
+        },
+
+        async editEntity(type) {
+            const result = await this.send(`${this.pathes[type]}/${this[type].editId}`);
+            this.printError(result.error || '');
+            if (!result.error) {
+                const model = this[type].model;
+                const newData = { ...model };
+
+                Object.keys(model).forEach(k => {
+                    let val = result.data[k];
+                    if (Array.isArray(val)) val = val.map(o => o.id);
+                    if (result.data[k]) newData[k] = val;
+                })
+
+                this[type].model = newData;
+                const name = type.charAt(0).toUpperCase() + type.slice(1);
+                const modal = new bootstrap.Modal(this.$refs[`create${name}Modal`], { keyboard: false })
+                modal.show();
+                this.isEditModal = true;
             }
         },
 
-        async fetchAuthors() {
-            const authors = await this.send('authors');
-            this.authors.list = authors.data;
+        async deleteEntity(type) {
+            const result = await this.send(`${this.pathes[type]}/${this[type].deleteId}`, 'DELETE');
+            this.printError(result.error || '');
+            this.print(JSON.stringify(result.data, null, 4));
         },
 
         async sendRequest(path, method, params, head) {
             this.errorsValidation = {};
             const result = await this.send(path, method, params, head)
-            this.clearFormModal();
             this.printError(result.error || '');
             this.print(JSON.stringify(result.data, null, 4));
+        },
+
+        saveBtn(type) {
+            const typeData = this[type]
+            const method = this.isEditModal ? 'PUT' : 'POST';
+            let url = this.pathes[type]
+            if (this.isEditModal) url += `/${typeData.editId}`
+            this.sendRequest(url, method, typeData.model)
         },
 
         async send(path, method, params, head) {
@@ -183,9 +273,11 @@ const App = {
             try {
                 const response = await this.fetchApi(path, method, params, head);
                 const resp = await response.json();
-
+                // console.log(response, resp);
                 if (resp.data) {
                     data = resp.data;
+                } else if (response.ok) {
+                    data = response.statusText;
                 } else {
                     if (resp.message) {
                         error = resp.message
@@ -194,16 +286,6 @@ const App = {
                         error = `${resp.status} ${resp.statusText}`;
                     }
                 }
-                // if (successCodes.includes(resp.status)) {
-                //     data = resp.data;
-                // } else {
-                //     if (resp.message) {
-                //         error = resp.message
-                //         if (resp.errors) this.errorsValidation = resp.errors
-                //     } else {
-                //         error = `${resp.status} ${resp.statusText}`;
-                //     }
-                // }
             } catch (err) {
                 if (err.response && err.response.data && err.response.data.message) {
                     error = err.response.data.message

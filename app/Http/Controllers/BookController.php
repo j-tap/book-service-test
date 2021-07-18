@@ -82,7 +82,7 @@ class BookController extends Controller
         if ($request->input('authors'))
         {
             $authors = $request->input('authors');
-            $book = $book->authors()->attach($authors);
+            $book->authors()->attach($authors);
         }
 
         return new BookResource($book);
@@ -103,7 +103,9 @@ class BookController extends Controller
         }
 
         return [
-            'success' => $success
+            'data' => [
+                'success' => $success,
+            ]
         ];
     }
 }
