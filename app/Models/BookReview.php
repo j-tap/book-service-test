@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BookReviews extends Model
+class BookReview extends Model
 {
     use HasFactory;
 
@@ -15,9 +15,9 @@ class BookReviews extends Model
      * @var array
      */
     protected $fillable = [
+        'book_id',
         'text',
         'rating',
-        'book_id',
-        'user_id',
+        // 'user_id',
     ];
 }

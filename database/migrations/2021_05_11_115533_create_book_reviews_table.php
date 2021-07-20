@@ -17,7 +17,7 @@ class CreateBookReviewsTable extends Migration
         {
             $table->id();
             $table->text('text');
-            $table->unsignedTinyInteger('rating');
+            $table->unsignedTinyInteger('rating')->default(0);
             $table->unsignedInteger('book_id')->default(0);
             $table->unsignedInteger('user_id')->default(0);
             $table->timestamps();

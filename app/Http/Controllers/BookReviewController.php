@@ -4,16 +4,33 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\BookReview;
+
+use App\Http\Requests\BookReview\BookReviewStoreRequest;
+use App\Http\Requests\BookReview\BookReviewUpdateRequest;
+
+use App\Http\Resources\BookReview\BookReviewResource;
+
+use App\Services\BookReview\BookReviewService;
+
 class BookReviewController extends Controller
 {
+    /**
+     * @param BookReviewService $bookReviewService
+     */
+    public function __construct(BookReviewService $bookReviewService)
+    {
+        $this->bookReviewService = $bookReviewService;
+    }
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        return $this->bookReviewService->index($request);
     }
 
     /**
@@ -22,9 +39,10 @@ class BookReviewController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BookReviewStoreRequest $request)
     {
-        //
+        $bookReview = BookReview::create($request->validated());
+        return new BookReviewResource($bookReview);
     }
 
     /**

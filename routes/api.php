@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\http\Controllers\BookController;
+use App\http\Controllers\BookReviewController;
 use App\http\Controllers\AuthorController;
 
 /*
@@ -21,6 +22,10 @@ use App\http\Controllers\AuthorController;
 // Route::middleware('auth:api')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
+
+Route::group(['prefix' => 'books'], function () {
+    Route::apiResource('/reviews', BookReviewController::class);
+});
 
 Route::apiResources([
     'books' => BookController::class,
