@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Http\Resources\Author\AuthorCollection;
+use App\Models\Author;
+
 use App\Http\Resources\Author\AuthorResource;
 use App\Http\Resources\Author\AuthorWithBooksResource;
+
+use App\Http\Requests\Author\AuthorStoreRequest;
+use App\Http\Requests\Author\AuthorUpdateRequest;
+
 use App\Services\Author\AuthorService;
-use App\Models\Author;
 
 class AuthorController extends Controller
 {
@@ -36,15 +40,9 @@ class AuthorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AuthorStoreRequest $request)
     {
-        request()->validate([
-            'first_name' => 'required|max:100',
-            'last_name' => 'required|max:100',
-            'birthday' => 'date',
-        ]);
-
-        $author = Author::create($request->all());
+        $author = Author::create($request->validated());
 
         return new AuthorResource($author);
     }
@@ -67,20 +65,9 @@ class AuthorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Author $author)
+    public function update(AuthorUpdateRequest $request, Author $author)
     {
-        request()->validate([
-            'first_name' => 'required|max:100',
-            'last_name' => 'required|max:100',
-            'birthday' => 'date',
-        ]);
-
-        $author->update($request->only([
-            'first_name',
-            'last_name',
-            'birthday',
-            'description',
-        ]));
+        $author->update($request->validated());
 
         return new AuthorResource($author);
     }

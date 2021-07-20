@@ -6,10 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 use App\Models\Book;
+
 use App\Http\Resources\Book\BookResource;
 use App\Http\Resources\Book\BookWithAuthorsResource;
+
 use App\Http\Requests\Book\BookStoreRequest;
 use App\Http\Requests\Book\BookUpdateRequest;
+
 use App\Services\Book\BookService;
 
 class BookController extends Controller
