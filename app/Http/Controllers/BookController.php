@@ -3,37 +3,44 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
-use App\Http\Resources\BookResource;
 use App\Models\Book;
+use App\Http\Resources\Book\BookResource;
+use App\Http\Resources\Book\BookWithAuthorsResource;
+use App\Http\Requests\Book\BookStoreRequest;
+use App\Http\Requests\Book\BookUpdateRequest;
+use App\Services\Book\BookService;
 
 class BookController extends Controller
 {
     /**
+     * @param BookService $bookService
+     */
+    public function __construct(BookService $bookService)
+    {
+        $this->bookService = $bookService;
+    }
+
+    /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Book
      */
-    public function index()
+    public function index(Request $request)
     {
-        return BookResource::collection(Book::all());
+        return $this->bookService->index($request);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(BookStoreRequest $request)
     {
-        request()->validate([
-            'title' => 'required|max:100',
-            'pages_count' => 'required',
-            'year' => 'required',
-        ]);
-
-        $book = Book::create($request->all());
+        $book = Book::create($request->validated());
 
         if ($request->input('authors'))
         {
@@ -47,35 +54,24 @@ class BookController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $book
+     * @param  Book  $book
      * @return \Illuminate\Http\Response
      */
     public function show(Book $book)
     {
-        return new BookResource(Book::findOrFail($book['id']));
+        return new BookWithAuthorsResource($book);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Book $book)
+    public function update(BookUpdateRequest $request, Book $book)
     {
-        request()->validate([
-            'title' => 'required|max:100',
-            'pages_count' => 'required',
-            'year' => 'required',
-        ]);
-
-        $book->update($request->only([
-            'title',
-            'description',
-            'pages_count',
-            'year',
-        ]));
+        $book->update($request->validated());
 
         $book->authors()->detach();
 
@@ -91,7 +87,7 @@ class BookController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  Book $book
      * @return \Illuminate\Http\Response
      */
     public function destroy(Book $book)
@@ -102,10 +98,12 @@ class BookController extends Controller
             $success = $book->authors()->detach();
         }
 
+        // return response( null, Response::HTTP_NO_CONTENT);
         return [
             'data' => [
                 'success' => $success,
             ]
         ];
     }
+
 }

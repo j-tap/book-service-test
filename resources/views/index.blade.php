@@ -13,12 +13,12 @@
                     А так же к книге можно прикреплять комментарии.</p>
                     <p>Реализовать API для:</p>
                     <ol>
-                        <li>создания авторов и книг
-                        <li>получения списка книг по автору/авторам
-                        <li>получение информации о конкретном авторе со списком его книг
+                        <li>&check; создания авторов и книг
+                        <li>&check; получения списка книг по автору/авторам
+                        <li>&check; получение информации о конкретном авторе со списком его книг
                         <li>получение информации о конкретной книге с ее авторами и комментариями
                         <li>для комментариев сделать поддержку пагинации
-                        <li>удаление книги / автора
+                        <li>&check; удаление книги / автора
                     </ol>
                 </div>
             </div>
@@ -38,45 +38,64 @@
             <div class="tab-content" id="modelManageTabsContent">
                 <div class="tab-pane fade show active" id="booksTab" role="tabpanel" aria-labelledby="booksTab-tab">
                     <div class="btn-toolbar" role="toolbar">
-                        <div class="btn-group me-2" role="group">
+                        <div class="btn-group me-2 mb-2" role="group">
                             <button type="button" class="btn btn-dark" @click.stop="createEntity('book')">Create Book</button>
                         </div>
-                        <div class="btn-group me-2" role="group">
+                        <div class="btn-group me-2 mb-2" role="group">
                             <button type="button" class="btn btn-dark" @click.stop="editEntity('book')">Edit Book</button>
                             <input v-model="book.editId" type="number" class="form-control" style="width:80px">
                         </div>
-                        <div class="btn-group me-2" role="group">
+                        <div class="btn-group me-2 mb-2" role="group">
                             <button type="button" class="btn btn-dark" @click.stop="sendRequest(pathes.book)">Show all Books</button>
                         </div>
-                        <div class="input-group me-2">
+                        <div class="input-group me-2 mb-2" role="group">
                             <button type="button" class="btn btn-dark" @click.stop="sendRequest(`${pathes.book}/${book.showId}`)">Show Book #</button>
                             <input v-model="book.showId" type="number" class="form-control" style="width:80px">
                         </div>
-                        <div class="input-group me-2">
+                        <div class="input-group me-2 mb-2">
                             <button type="button" class="btn btn-dark" @click.stop="deleteEntity('book')">Delete Book #</button>
                             <input v-model="book.deleteId" type="number" class="form-control" style="width:80px">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="input-group me-2 mb-2">
+                            <button type="button" class="btn btn-dark" @click.stop="sendRequest(pathes.book, 'GET', {title: book.filters.title})">Search by title</button>
+                            <input v-model="book.filters.title" class="form-control" style="width:200px">
+                        </div>
+                        <div class="input-group me-2 mb-2">
+                            <button type="button" class="btn btn-dark" @click.stop="sendRequest(pathes.book, 'GET', {authors: book.filters.authors})">Books by Authors</button>
+                            <select v-model="book.filters.authors" class="form-control"  style="width:300px" multiple>
+                                <option value="null" selected>None</option>
+                                <option v-for="author in author.list" :value="author.id" v-text="`${author.first_name} ${author.last_name}`"></option>
+                            </select>
                         </div>
                     </div>
                 </div>
                 <div class="tab-pane fade" id="authorTab" role="tabpanel" aria-labelledby="authorTab-tab">
                     <div class="btn-toolbar" role="toolbar">
-                        <div class="btn-group me-2" role="group">
+                        <div class="btn-group me-2 mb-2" role="group">
                             <button type="button" class="btn btn-dark" @click.stop="createEntity('author')">Create Author</button>
                         </div>
-                        <div class="btn-group me-2" role="group">
+                        <div class="btn-group me-2 mb-2" role="group">
                             <button type="button" class="btn btn-dark" @click.stop="editEntity('author')">Edit Author</button>
                             <input v-model="author.editId" type="number" class="form-control" style="width:80px">
                         </div>
-                        <div class="btn-group me-2" role="group">
+                        <div class="btn-group me-2 mb-2" role="group">
                             <button type="button" class="btn btn-dark" @click.stop="sendRequest(pathes.author)">Show all Authors</button>
                         </div>
-                        <div class="input-group me-2">
+                        <div class="input-group me-2 mb-2">
                             <button type="button" class="btn btn-dark" @click.stop="sendRequest(`${pathes.author}/${author.showId}`)">Show Author #</button>
                             <input v-model="author.showId" type="number" class="form-control" style="width:80px">
                         </div>
-                        <div class="input-group me-2">
+                        <div class="input-group me-2 mb-2">
                             <button type="button" class="btn btn-dark" @click.stop="deleteEntity('author')">Delete Author #</button>
                             <input v-model="author.deleteId" type="number" class="form-control" style="width:80px">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="input-group me-2 mb-2">
+                            <button type="button" class="btn btn-dark" @click.stop="sendRequest(pathes.author, 'GET', {name: author.filters.name})">Search by name</button>
+                            <input v-model="author.filters.name" class="form-control" style="width:200px">
                         </div>
                     </div>
                 </div>
@@ -117,6 +136,7 @@
 const App = {
     data() {
         return {
+            loading: false,
             apiError: null,
             apiResult: null,
 
@@ -133,6 +153,10 @@ const App = {
                 showId: 0,
                 editId: 0,
                 deleteId: 0,
+                filters: {
+                    title: null,
+                    authors: [],
+                },
                 model: {
                     title: null,
                     pages_count: 0,
@@ -147,6 +171,9 @@ const App = {
                 showId: 0,
                 editId: 0,
                 deleteId: 0,
+                filters: {
+                    name: null,
+                },
                 model: {
                     first_name: null,
                     last_name: null,
@@ -173,13 +200,19 @@ const App = {
             this.book.items = result;
         },
 
+        loading(is) {
+            document.body.style.cursor = is ? 'wait' : 'default';
+        },
+
     },
 
     mounted() {
+        this.fetchEntity('author');
+
         this.$refs.createBookModal
             .addEventListener('show.bs.modal', () => {
-                this.fetchEntity('book')
-                this.fetchEntity('author')
+                this.fetchEntity('book');
+                this.fetchEntity('author');
             });
         this.$refs.createBookModal
             .addEventListener('hidden.bs.modal', () => {
@@ -188,7 +221,7 @@ const App = {
 
         this.$refs.createAuthorModal
             .addEventListener('show.bs.modal', () => {
-                this.fetchEntity('author')
+                this.fetchEntity('author');
             });
         this.$refs.createAuthorModal
             .addEventListener('hidden.bs.modal', () => {
@@ -264,11 +297,11 @@ const App = {
         },
 
         async send(path, method, params, head) {
+            this.loading = true
             this.apiError = null;
             let data = null;
             let error = null;
             let resp = null;
-            const successCodes = [200, 201];
 
             try {
                 const response = await this.fetchApi(path, method, params, head);
@@ -293,6 +326,7 @@ const App = {
                     error = `${err.name}: ${err.message}`
                 }
             }
+            this.loading = false
             return { data, error }
         },
 
@@ -309,7 +343,14 @@ const App = {
                 method,
                 headers,
             }
-            if (params) requestParams.body = JSON.stringify(params);
+            if (params) {
+                if (method !== 'GET') {
+                    requestParams.body = JSON.stringify(params);
+                } else {
+                    const strParams = Object.keys(params).map(key => key + '=' + params[key]).join('&');
+                    path += `?${strParams}`;
+                }
+            }
 
             const result = await fetch(`/api/${path}`, requestParams);
             return result

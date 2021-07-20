@@ -4,19 +4,30 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Http\Resources\AuthorResource;
+use App\Http\Resources\Author\AuthorCollection;
+use App\Http\Resources\Author\AuthorResource;
+use App\Http\Resources\Author\AuthorWithBooksResource;
+use App\Services\Author\AuthorService;
 use App\Models\Author;
 
 class AuthorController extends Controller
 {
     /**
+     * @param AuthorService $authorService
+     */
+    public function __construct(AuthorService $authorService)
+    {
+        $this->authorService = $authorService;
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return AuthorResource::collection(Author::all());
+        return $this->authorService->index($request);
     }
 
     /**
@@ -41,12 +52,12 @@ class AuthorController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $author
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Author $author)
+    public function show($id)
     {
-        return new AuthorResource(Author::findOrFail($author['id']));
+        return new AuthorWithBooksResource(Author::findOrFail($id));
     }
 
     /**

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Book;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class AuthorCollection extends ResourceCollection
+class BookCollection extends ResourceCollection
 {
     /**
      * Transform the resource collection into an array.
@@ -14,6 +14,6 @@ class AuthorCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return BookWithAuthorsResource::collection($this->collection);
     }
 }
