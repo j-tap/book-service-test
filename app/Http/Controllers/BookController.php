@@ -95,12 +95,8 @@ class BookController extends Controller
     public function destroy(Book $book)
     {
         $success = $book->delete();
-        if ($success)
-        {
-            $success = $book->authors()->detach();
-        }
+        if ($success) $success = $book->authors()->detach();
 
-        // return response( null, Response::HTTP_NO_CONTENT);
         return [
             'data' => [
                 'success' => $success,

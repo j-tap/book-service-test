@@ -81,10 +81,7 @@ class AuthorController extends Controller
     public function destroy(Author $author)
     {
         $success = $author->delete();
-        if ($success)
-        {
-            $success = $author->books()->detach();
-        }
+        if ($success) $success = $author->books()->detach();
 
         return [
             'data' => [

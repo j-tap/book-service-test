@@ -32,6 +32,9 @@
                     <button class="nav-link active" id="booksTab-tab" data-bs-toggle="tab" data-bs-target="#booksTab" type="button" role="tab" aria-controls="booksTab" aria-selected="true">Books</button>
                 </li>
                 <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="bookReviewsTab-tab" data-bs-toggle="tab" data-bs-target="#bookReviewsTab" type="button" role="tab" aria-controls="bookReviewsTab" aria-selected="false">Book Reviews</button>
+                </li>
+                <li class="nav-item" role="presentation">
                     <button class="nav-link" id="authorTab-tab" data-bs-toggle="tab" data-bs-target="#authorTab" type="button" role="tab" aria-controls="authorTab" aria-selected="false">Authors</button>
                 </li>
             </ul>
@@ -68,6 +71,24 @@
                                 <option value="null" selected>None</option>
                                 <option v-for="author in author.list" :value="author.id" v-text="`${author.first_name} ${author.last_name}`"></option>
                             </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="bookReviewsTab" role="tabpanel" aria-labelledby="bookReviewsTab-tab">
+                    <div class="btn-toolbar" role="toolbar">
+                        <div class="btn-group me-2 mb-2" role="group">
+                            <button type="button" class="btn btn-dark" @click.stop="createEntity('bookReviews')">Create book Reviews</button>
+                        </div>
+                        <div class="btn-group me-2 mb-2" role="group">
+                            <button type="button" class="btn btn-dark" @click.stop="editEntity('bookReviews')">Edit book Reviews</button>
+                            <input v-model="bookReviews.editId" type="number" class="form-control" style="width:80px">
+                        </div>
+                        <div class="btn-group me-2 mb-2" role="group">
+                            <button type="button" class="btn btn-dark" @click.stop="sendRequest(pathes.bookReviews)">Show all book Reviews</button>
+                        </div>
+                        <div class="input-group me-2 mb-2">
+                            <button type="button" class="btn btn-dark" @click.stop="deleteEntity('bookReviews')">Delete book Reviews #</button>
+                            <input v-model="bookReviews.deleteId" type="number" class="form-control" style="width:80px">
                         </div>
                     </div>
                 </div>
@@ -122,6 +143,12 @@
         <x-forms.select name="authors" value="book.model.authors" validation="errorsValidation.authors" items="author.items" multiple class="mb-2"/>
     </x-modal>
 
+    <x-modal name="createBookReviewsModal" title="Book Comment" success-event="saveBtn('bookReviews')">
+        <x-forms.select name="book_id" value="bookReviews.model.book_id" validation="errorsValidation.book_id" items="book.items" class="mb-2"/>
+        <x-forms.textarea name="text" value="bookReviews.model.text" validation="errorsValidation.text" class="mb-2"/>
+        <x-forms.select name="rating" value="bookReviews.model.rating" validation="errorsValidation.rating" items="bookReviews.ratingItems" class="mb-2"/>
+    </x-modal>
+
     <x-modal name="createAuthorModal" title="Author" success-event="saveBtn('author')">
         <x-forms.input name="first_name" value="author.model.first_name" validation="errorsValidation.first_name" class="mb-2"/>
         <x-forms.input name="last_name" value="author.model.last_name" validation="errorsValidation.last_name" class="mb-2"/>
@@ -145,6 +172,7 @@ const App = {
             pathes: {
                 book: 'books',
                 author: 'authors',
+                bookReviews: 'books/reviews',
             },
 
             isEditModal: false,
@@ -166,6 +194,23 @@ const App = {
                 },
                 list: [],
                 items: [],
+            },
+            bookReviews: {
+                editId: 0,
+                deleteId: 0,
+                model: {
+                    text: null,
+                    rating: 0,
+                    book_id: 0,
+                },
+                list: [],
+                ratingItems: [
+                    { value: 1, text: 'Very bad' },
+                    { value: 2, text: 'Bad' },
+                    { value: 3, text: 'Middle' },
+                    { value: 4, text: 'Good' },
+                    { value: 5, text: 'Very good' },
+                ],
             },
             author: {
                 showId: 0,
@@ -217,6 +262,15 @@ const App = {
         this.$refs.createBookModal
             .addEventListener('hidden.bs.modal', () => {
                 this.clearFormModal('book');
+            });
+
+        this.$refs.createBookReviewsModal
+            .addEventListener('show.bs.modal', () => {
+                this.fetchEntity('book');
+            });
+        this.$refs.createBookReviewsModal
+            .addEventListener('hidden.bs.modal', () => {
+                this.clearFormModal('bookReviews');
             });
 
         this.$refs.createAuthorModal

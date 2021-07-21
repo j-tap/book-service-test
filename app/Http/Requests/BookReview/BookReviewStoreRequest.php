@@ -24,6 +24,7 @@ class BookReviewStoreRequest extends FormRequest
     public function rules()
     {
         return [
+            'book_id' => 'required|integer|min:1',
             'text' => 'required',
             'rating' => 'integer|min:1|max:5',
         ];

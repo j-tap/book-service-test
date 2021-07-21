@@ -12,13 +12,14 @@ class Select extends Component
     public $items;
     public $label;
     public $multiple;
+    public $size;
 
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct($name, $value, $validation = '', $items, $multiple = null)
+    public function __construct($name, $value, $validation = '', $items, $multiple = false)
     {
         $this->name = $name;
         $this->value = $value;
@@ -26,6 +27,7 @@ class Select extends Component
         $this->items = $items;
         $this->multiple = $multiple ? 'multiple' : '';
         $this->label = ucfirst(str_replace('_', ' ', $name));
+        $this->size = $multiple ? 'size="4"' : '';
     }
 
     /**

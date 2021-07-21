@@ -4,7 +4,7 @@ namespace App\Http\Requests\BookReview;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class BookReviewUpdateStoreRequest extends FormRequest
+class BookReviewUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
