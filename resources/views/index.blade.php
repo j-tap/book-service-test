@@ -298,7 +298,7 @@ const App = {
 
         async fetchEntity(type) {
             const resp = await this.send(this.pathes[type]);
-            this[type].list = resp.data;
+            this[type].list = resp.data.data;
         },
 
         createEntity(type) {
@@ -316,9 +316,9 @@ const App = {
                 const newData = { ...model };
 
                 Object.keys(model).forEach(k => {
-                    let val = result.data[k];
+                    let val = result.data.data[k];
                     if (Array.isArray(val)) val = val.map(o => o.id);
-                    if (result.data[k]) newData[k] = val;
+                    if (result.data.data[k]) newData[k] = val;
                 })
 
                 this[type].model = newData;
@@ -353,35 +353,40 @@ const App = {
         async send(path, method, params, head) {
             this.loading = true
             this.apiError = null;
-            let data = null;
-            let error = null;
+            const result = {
+                data: null,
+                error: null,
+            };
             let resp = null;
 
             try {
                 const response = await this.fetchApi(path, method, params, head);
                 const resp = await response.json();
                 // console.log(response, resp);
+                if (resp.meta) result.meta = resp.meta
+                if (resp.links) result.links = resp.links
+
                 if (resp.data) {
-                    data = resp.data;
+                    result.data = resp;
                 } else if (response.ok) {
-                    data = response.statusText;
+                    result.data = response.statusText;
                 } else {
                     if (resp.message) {
-                        error = resp.message
+                        result.rror = resp.message
                         if (resp.errors) this.errorsValidation = resp.errors
                     } else {
-                        error = `${resp.status} ${resp.statusText}`;
+                        result.error = `${resp.status} ${resp.statusText}`;
                     }
                 }
             } catch (err) {
                 if (err.response && err.response.data && err.response.data.message) {
-                    error = err.response.data.message
+                    result.error = err.response.data.message
                 } else {
-                    error = `${err.name}: ${err.message}`
+                    result.error = `${err.name}: ${err.message}`
                 }
             }
-            this.loading = false
-            return { data, error }
+            this.loading = false;
+            return result;
         },
 
         async fetchApi(path, method = 'GET', params = null, head = {}) {

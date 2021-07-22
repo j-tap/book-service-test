@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Filters\QueryFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,8 +23,13 @@ class Author extends Model
         'birthday',
     ];
 
-    public function books()
+    public function scopeFilter(Builder $builder, QueryFilter $filter)
     {
-        return $this->belongsToMany(Book::class, 'author_to_book', 'author_id', 'book_id');
+        return $filter->apply($builder);
     }
+
+    // public function books()
+    // {
+    //     return $this->belongsToMany(Book::class, 'author_to_book', 'author_id', 'book_id');
+    // }
 }

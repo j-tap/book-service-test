@@ -23,7 +23,7 @@ class BookWithAuthorsResource extends JsonResource
             'description' => $this->description,
             'pages_count' => $this->pages_count,
             'year' => $this->year,
-            'reviews' => BookReviewResource::collection($this->reviews),
+            // 'reviews' => BookReviewResource::collection($this->reviews),
             'authors' => AuthorResource::collection($this->authors),
         ];
     }

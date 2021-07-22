@@ -3,8 +3,10 @@
 namespace App\Services\Book;
 
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
 
 use App\Models\Book;
+use App\Models\Author;
 use App\Http\Resources\Book\BookCollection;
 
 class BookService
@@ -14,38 +16,27 @@ class BookService
      *
      * @return array
      */
-    public function index(Request $request)
+    public function index(Request $request, $authorId)
     {
-        $books = Book::all();
+        $title = mb_strtolower(trim($request->input('title')));
+        $authorsIds = null;
+        if (isset($authorId)) $authorsIds = [ $authorId ];
+        elseif ($request->has('authors')) $authorsIds = explode(',', $request->input('authors'));
 
-        $filterAuthors = $request->input('authors');
-        $filterTitle = $request->input('title');
-
-        // Filter by Authors
-        if ($filterAuthors)
+        $books = Book::when($title, function (Builder $query) use($title)
         {
-            $authorsIds = explode(',', $filterAuthors);
-            $books = $books->filter(function ($item) use ($authorsIds) {
-                $is = false;
-                foreach ($item->authors as $author)
-                {
-                    if (in_array($author->id, $authorsIds))
-                    {
-                        $is = true;
-                        break;
-                    }
-                }
-                return $is;
-            });
-        }
-        // Search in title
-        if ($filterTitle)
+            // Search in title
+            $query->where('title', 'ilike', "%$title%");
+        })
+        ->when($authorsIds, function (Builder $query) use($authorsIds)
         {
-            $books = $books->filter(function ($item) use ($filterTitle)
+            $query->whereHas('authors', function (Builder $q) use($authorsIds)
             {
-                return str_contains(mb_strtolower($item->title), mb_strtolower($filterTitle));
+                // Get by authors
+                $q->whereIn('id', $authorsIds);
             });
-        }
+        })
+        ->get();
 
         return new BookCollection($books);
     }

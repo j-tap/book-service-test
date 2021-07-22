@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\Author;
 
 use App\Http\Resources\Author\AuthorResource;
-use App\Http\Resources\Author\AuthorWithBooksResource;
 
 use App\Http\Requests\Author\AuthorStoreRequest;
 use App\Http\Requests\Author\AuthorUpdateRequest;
@@ -43,7 +42,6 @@ class AuthorController extends Controller
     public function store(AuthorStoreRequest $request)
     {
         $author = Author::create($request->validated());
-
         return new AuthorResource($author);
     }
 
@@ -55,7 +53,7 @@ class AuthorController extends Controller
      */
     public function show($id)
     {
-        return new AuthorWithBooksResource(Author::findOrFail($id));
+        return $this->authorService->show($id);
     }
 
     /**
@@ -68,7 +66,6 @@ class AuthorController extends Controller
     public function update(AuthorUpdateRequest $request, Author $author)
     {
         $author->update($request->validated());
-
         return new AuthorResource($author);
     }
 

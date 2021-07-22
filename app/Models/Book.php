@@ -21,10 +21,10 @@ class Book extends Model
         'year',
     ];
 
-    public function reviews()
-    {
-        return $this->hasMany(BookReview::class, 'book_id');
-    }
+    // public function reviews()
+    // {
+    //     return $this->hasMany(BookReview::class, 'book_id');
+    // }
 
     public function authors()
     {

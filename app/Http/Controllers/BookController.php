@@ -29,9 +29,9 @@ class BookController extends Controller
      *
      * @return Book
      */
-    public function index(Request $request)
+    public function index(Request $request, $authorId = null)
     {
-        return $this->bookService->index($request);
+        return $this->bookService->index($request, $authorId);
     }
 
     /**

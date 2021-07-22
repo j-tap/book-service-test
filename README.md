@@ -14,7 +14,30 @@
 - [ ] для комментариев сделать поддержку пагинации
 - [x] удаление книги / автора
 
-> Проверить API можно встроенным интерфейсом на главной сранице
+```
+POST /api/authors CREATE
+GET /api/authors
+GET /api/authors?name={string}
+GET /api/authors/{id}
+PUT /api/authors/{id} UPDATE
+GET /api/authors/{id}/books
+DELETE /api/authors/{id}
+
+POST /api/books CREATE
+GET /api/books?title={string}
+GET /api/books?authors={id,id,id}
+GET /api/books/{id}
+PUT /api/books/{id} UPDATE
+DELETE /api/books/{id}
+
+POST /api/reviews CREATE
+GET /api/reviews
+GET /api/reviews/{id}
+PUT /api/reviews/{id} UPDATE
+DELETE /api/reviews/{id}
+```
+
+> Проверить API можно встроенным интерфейсом на главной странице
 
 ### Запуск проекта для разработки
 - `composer install` установка зависимостей

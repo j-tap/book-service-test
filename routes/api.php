@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+// use App\Http\Controllers\Controller;
+// use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\http\Controllers\BookController;
@@ -25,6 +25,10 @@ use App\http\Controllers\AuthorController;
 
 Route::group(['prefix' => 'books'], function () {
     Route::apiResource('/reviews', BookReviewController::class);
+});
+
+Route::group(['prefix' => 'authors'], function () {
+    Route::get('/{author_id}/books', [BookController::class, 'index']);
 });
 
 Route::apiResources([
