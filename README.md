@@ -11,32 +11,31 @@
 - [x] получения списка книг по автору/авторам
 - [x] получение информации о конкретном авторе со списком его книг
 - [x] получение информации о конкретной книге с ее авторами и комментариями
-- [ ] для комментариев сделать поддержку пагинации
+- [x] для комментариев сделать поддержку пагинации
 - [x] удаление книги / автора
 
-```
-POST /api/authors CREATE
-GET /api/authors
-GET /api/authors?name={string}
-GET /api/authors/{id}
-PUT /api/authors/{id} UPDATE
-GET /api/authors/{id}/books
-DELETE /api/authors/{id}
+##### Работа с API
+POST `/api/authors` CREATE
+GET `/api/authors`
+GET `/api/authors?name={string}` Search by name
+GET `/api/authors/{id}`
+PUT `/api/authors/{id}` UPDATE
+GET `/api/authors/{id}/books`
+DELETE `/api/authors/{id}`
 
-POST /api/books CREATE
-GET /api/books?title={string}
-GET /api/books?authors={id,id,id}
-GET /api/books/{id}
-PUT /api/books/{id} UPDATE
-DELETE /api/books/{id}
+POST `/api/books` CREATE
+GET `/api/books?title={string}` Search by title
+GET `/api/books?authors={id,id,id}`
+GET `/api/books/{id}`
+PUT `/api/books/{id}` UPDATE
+DELETE `/api/books/{id}`
 
-POST /api/books/reviews CREATE
-GET /api/books/reviews
-GET /api/books/reviews?book_id={id}&page={int}
-GET /api/books/reviews/{id}
-PUT /api/books/reviews/{id} UPDATE
-DELETE /api/books/reviews/{id}
-```
+POST `/api/books/reviews` CREATE
+GET `/api/books/reviews`
+GET `/api/books/reviews?book_id={id}&page={int}`
+GET `/api/books/reviews/{id}`
+PUT `/api/books/reviews/{id}` UPDATE
+DELETE `/api/books/reviews/{id}`
 
 > Проверить API можно встроенным интерфейсом на главной странице
 
