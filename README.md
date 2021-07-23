@@ -30,11 +30,12 @@ GET /api/books/{id}
 PUT /api/books/{id} UPDATE
 DELETE /api/books/{id}
 
-POST /api/reviews CREATE
-GET /api/reviews
-GET /api/reviews/{id}
-PUT /api/reviews/{id} UPDATE
-DELETE /api/reviews/{id}
+POST /api/books/reviews CREATE
+GET /api/books/reviews
+GET /api/books/reviews?book_id={id}&page={int}
+GET /api/books/reviews/{id}
+PUT /api/books/reviews/{id} UPDATE
+DELETE /api/books/reviews/{id}
 ```
 
 > Проверить API можно встроенным интерфейсом на главной странице

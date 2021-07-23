@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 
 use App\Models\Book;
-use App\Models\Author;
 use App\Http\Resources\Book\BookCollection;
+use App\Http\Resources\Book\BookWithAuthorsResource;
 
 class BookService
 {
@@ -39,5 +39,11 @@ class BookService
         ->get();
 
         return new BookCollection($books);
+    }
+
+    public function show($id)
+    {
+        $book = Book::findOrFail($id);
+        return new BookWithAuthorsResource($book);
     }
 }

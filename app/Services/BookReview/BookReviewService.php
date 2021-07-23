@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Models\BookReview;
 use App\Http\Resources\BookReview\BookReviewCollection;
 
+use App\Http\Resources\BookReview\BookReviewResource;
+
 class BookReviewService
 {
     /**
@@ -17,16 +19,23 @@ class BookReviewService
      */
     public function index(Request $request)
     {
-        $currentPage = $request->input('current_page') || 1;
-        $bookId = $request->input('book_id') || null;
+        $counItems = 5;
+        $bookId = null;
+        if ($request->has('book_id')) $bookId = $request->input('book_id');
 
         $booksReview = BookReview::when($bookId, function (Builder $query) use($bookId)
         {
             // Search by name
             $query->where('book_id', '=', $bookId);
         })
-        ->paginate(1, $currentPage);
+        ->simplePaginate($counItems);
 
         return new BookReviewCollection($booksReview);
+    }
+
+    public function show($id)
+    {
+        $bookReview = BookReview::findOrFail($id);
+        return new BookReviewResource($bookReview);
     }
 }

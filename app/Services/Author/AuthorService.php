@@ -24,7 +24,8 @@ class AuthorService
             // Search by name
             $query->where('first_name', 'ilike', "%$name%")
                 ->orWhere('last_name', 'ilike', "%$name%");
-        })->get();
+        })
+        ->get();
 
         return new AuthorCollection($authors);
     }

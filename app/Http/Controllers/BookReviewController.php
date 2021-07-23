@@ -51,9 +51,9 @@ class BookReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(BookReview $bookReview)
+    public function show($id)
     {
-        return new BookReviewResource($bookReview);
+        return $this->bookReviewService->show($id);
     }
 
     /**

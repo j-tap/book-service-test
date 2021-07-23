@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\Book;
 
 use App\Http\Resources\Book\BookResource;
-use App\Http\Resources\Book\BookWithAuthorsResource;
 
 use App\Http\Requests\Book\BookStoreRequest;
 use App\Http\Requests\Book\BookUpdateRequest;
@@ -56,12 +55,12 @@ class BookController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  Book  $book
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Book $book)
+    public function show($id)
     {
-        return new BookWithAuthorsResource($book);
+        return $this->bookService->show($id);
     }
 
     /**
