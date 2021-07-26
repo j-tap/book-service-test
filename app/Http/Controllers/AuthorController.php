@@ -15,6 +15,8 @@ use App\Services\Author\AuthorService;
 
 class AuthorController extends Controller
 {
+    private $authorService;
+
     /**
      * @param AuthorService $authorService
      */
