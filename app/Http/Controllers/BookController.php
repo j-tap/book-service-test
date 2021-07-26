@@ -30,9 +30,9 @@ class BookController extends Controller
      *
      * @return Book
      */
-    public function index(Request $request, $authorId = null)
+    public function index(Request $request)
     {
-        return $this->bookService->index($request, $authorId);
+        return $this->bookService->index($request);
     }
 
     /**
@@ -43,6 +43,12 @@ class BookController extends Controller
      */
     public function store(BookStoreRequest $request)
     {
+        // TODO: посмотреть пример реализации
+        // почему весь этот функционал не в сервисе? зачем отправляешь на магию полученные значения из реквеста?
+        // давай пример. у тебя есть какая-то модель в которой строку могут менять и админы и пользователи.
+        // но так как ты всё отдаешь на откуп ларавель, пользователь зная какое поле передать в реквесте,
+        // то, сможет изменить это значения. например при редактировании себя и установив галочку is_admin.
+        // проще конкретно прописать $book->name = $request->get('name'); и т.д.
         $book = Book::create($request->validated());
 
         if ($request->has('authors'))
@@ -95,6 +101,10 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
+        // TODO: не совсем верный подход. проверкой удачности должна заниматься база данных
+        // а если при деатаче прошла ошибка? т.е. с одной стороны удалил, а с другой стороны не полностью.
+        // нужно просто конструкцию оборачивать в транзакцию от базы данных.
+        // DB::beginTransaction; $book->authors()->detach(); $book->delete(); DB::commit;
         $success = $book->delete();
         if ($success) $success = $book->authors()->detach();
 

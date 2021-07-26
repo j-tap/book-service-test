@@ -17,12 +17,11 @@ class BookService
      *
      * @return array
      */
-    public function index(Request $request, $authorId)
+    public function index(Request $request)
     {
         $title = Str::lower($request->input('title'));
         $authorsIds = null;
-        if (isset($authorId)) $authorsIds = [ $authorId ];
-        elseif ($request->has('authors')) $authorsIds = explode(',', $request->input('authors'));
+        if ($request->filled('authors')) $authorsIds = explode(',', $request->input('authors'));
 
         $books = Book::when($title, function (Builder $query) use($title)
         {

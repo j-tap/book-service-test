@@ -21,7 +21,7 @@ class BookReviewService
     {
         $counItems = 5;
         $bookId = null;
-        if ($request->has('book_id')) $bookId = $request->input('book_id');
+        if ($request->filled('book_id')) $bookId = $request->input('book_id');
 
         $booksReview = BookReview::when($bookId, function (Builder $query) use($bookId)
         {
