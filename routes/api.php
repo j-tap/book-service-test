@@ -4,9 +4,9 @@
 // use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\http\Controllers\BookController;
-use App\http\Controllers\BookReviewController;
-use App\http\Controllers\AuthorController;
+use App\Http\Controllers\BookController;
+use App\Http\Controllers\BookReviewController;
+use App\Http\Controllers\AuthorController;
 
 /*
 |--------------------------------------------------------------------------
