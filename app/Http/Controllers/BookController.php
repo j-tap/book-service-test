@@ -15,6 +15,8 @@ use App\Services\Book\BookService;
 
 class BookController extends Controller
 {
+    private $bookService;
+
     /**
      * @param BookService $bookService
      */
