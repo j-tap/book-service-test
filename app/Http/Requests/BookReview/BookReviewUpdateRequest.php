@@ -24,8 +24,8 @@ class BookReviewUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'text' => 'required',
-            'rating' => 'integer|min:1|max:5',
+            'text' => ['required'],
+            'rating' => ['integer', 'min:1', 'max:5'],
         ];
     }
 }

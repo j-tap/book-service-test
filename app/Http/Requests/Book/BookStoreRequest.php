@@ -24,9 +24,9 @@ class BookStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'title' => 'required|max:100',
-            'pages_count' => 'required|integer|min:1',
-            'year' => 'required|digits:4|integer|min:1900|max:' . (date('Y') + 1),
+            'title' => ['required', 'max:100'],
+            'pages_count' => ['required', 'integer', 'min:1'],
+            // 'year' => ['required', 'digits:4', 'integer', 'min:1900', 'max:' . (date('Y') + 1)],
         ];
     }
 }
