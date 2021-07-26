@@ -77,17 +77,11 @@ class BookReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(BookReview $bookReview)
+    public function destroy(int $id)
     {
-        // TODO: не совсем верный подход. проверкой удачности должна заниматься база данных
-        // а если при деатаче прошла ошибка? т.е. с одной стороны удалил, а с другой стороны не полностью.
-        // нужно просто конструкцию оборачивать в транзакцию от базы данных.
-        // DB::beginTransaction; $book->authors()->detach(); $book->delete(); DB::commit;
-        $success = $bookReview->delete();
-        return [
-            'data' => [
-                'success' => $success,
-            ]
-        ];
+        $bookReview = BookReview::findOrFail($id);
+        $bookReview->delete();
+
+        return response()->json();
     }
 }

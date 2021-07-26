@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Book;
 
@@ -99,20 +100,16 @@ class BookController extends Controller
      * @param  Book $book
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Book $book)
+    public function destroy(int $id)
     {
-        // TODO: не совсем верный подход. проверкой удачности должна заниматься база данных
-        // а если при деатаче прошла ошибка? т.е. с одной стороны удалил, а с другой стороны не полностью.
-        // нужно просто конструкцию оборачивать в транзакцию от базы данных.
-        // DB::beginTransaction; $book->authors()->detach(); $book->delete(); DB::commit;
-        $success = $book->delete();
-        if ($success) $success = $book->authors()->detach();
+        $book = Book::findOrFail($id);
 
-        return [
-            'data' => [
-                'success' => $success,
-            ]
-        ];
+        DB::beginTransaction();
+        $book->authors()->detach();
+        $book->delete();
+        DB::commit();
+
+        return response()->json();
     }
 
 }

@@ -77,19 +77,11 @@ class AuthorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Author $author)
+    public function destroy(int $id)
     {
-        // TODO: не совсем верный подход. проверкой удачности должна заниматься база данных
-        // а если при деатаче прошла ошибка? т.е. с одной стороны удалил, а с другой стороны не полностью.
-        // нужно просто конструкцию оборачивать в транзакцию от базы данных.
-        // DB::beginTransaction; $book->authors()->detach(); $book->delete(); DB::commit;
-        $success = $author->delete();
-        if ($success) $success = $author->books()->detach();
+        $author = Author::findOrFail($id);
+        $author->delete();
 
-        return [
-            'data' => [
-                'success' => $success,
-            ]
-        ];
+        return response()->json();
     }
 }
