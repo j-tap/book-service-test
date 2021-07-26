@@ -45,7 +45,7 @@ class BookController extends Controller
     {
         $book = Book::create($request->validated());
 
-        if ($request->input('authors'))
+        if ($request->has('authors'))
         {
             $authors = $request->input('authors');
             $book->authors()->attach($authors);
