@@ -4,6 +4,7 @@ namespace App\Services\Book;
 
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 use App\Models\Book;
 use App\Http\Resources\Book\BookCollection;
@@ -18,7 +19,7 @@ class BookService
      */
     public function index(Request $request, $authorId)
     {
-        $title = mb_strtolower(trim($request->input('title')));
+        $title = Str::lower($request->input('title'));
         $authorsIds = null;
         if (isset($authorId)) $authorsIds = [ $authorId ];
         elseif ($request->has('authors')) $authorsIds = explode(',', $request->input('authors'));

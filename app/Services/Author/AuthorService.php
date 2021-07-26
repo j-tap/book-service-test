@@ -4,6 +4,7 @@ namespace App\Services\Author;
 
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 use App\Models\Author;
 use App\Http\Resources\Author\AuthorCollection;
@@ -18,7 +19,7 @@ class AuthorService
      */
     public function index(Request $request)
     {
-        $name = mb_strtolower(trim($request->input('name')));
+        $name = Str::lower(trim($request->input('name')));
         $authors = Author::when($name, function (Builder $query) use($name)
         {
             // Search by name
