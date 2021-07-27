@@ -26,7 +26,7 @@ class BookStoreRequest extends FormRequest
         return [
             'title' => ['required', 'max:100'],
             'pages_count' => ['required', 'integer', 'min:1'],
-            'authors' => ['nullable', 'integer', 'exists:authors,id'],
+            'authors' => ['nullable', 'array', 'exists:authors,id'],
             // 'year' => ['required', 'digits:4', 'integer', 'min:1900', 'max:' . (date('Y') + 1)],
         ];
     }

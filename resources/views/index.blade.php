@@ -190,7 +190,7 @@ const App = {
                     pages_count: 0,
                     year: null,
                     description: null,
-                    authors: [],
+                    authors: null,
                 },
                 list: [],
                 items: [],
