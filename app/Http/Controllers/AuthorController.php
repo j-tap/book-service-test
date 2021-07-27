@@ -4,13 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\Author;
-
-use App\Http\Resources\Author\AuthorResource;
-
 use App\Http\Requests\Author\AuthorStoreRequest;
 use App\Http\Requests\Author\AuthorUpdateRequest;
-
 use App\Services\Author\AuthorService;
 
 class AuthorController extends Controller
@@ -43,8 +38,7 @@ class AuthorController extends Controller
      */
     public function store(AuthorStoreRequest $request)
     {
-        $author = Author::create($request->validated());
-        return new AuthorResource($author);
+        return $this->authorService->store($request);
     }
 
     /**
@@ -65,23 +59,19 @@ class AuthorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(AuthorUpdateRequest $request, Author $author)
+    public function update(AuthorUpdateRequest $request, int $id)
     {
-        $author->update($request->validated());
-        return new AuthorResource($author);
+        return $this->authorService->update($request, $id);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  int $id
+     * @return json
      */
     public function destroy(int $id)
     {
-        $author = Author::findOrFail($id);
-        $author->delete();
-
-        return response()->json();
+        return $this->bookService->destroy($id);
     }
 }

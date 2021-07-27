@@ -43,8 +43,7 @@ class BookReviewController extends Controller
      */
     public function store(BookReviewStoreRequest $request)
     {
-        $bookReview = BookReview::create($request->validated());
-        return new BookReviewResource($bookReview);
+        return $this->bookReviewService->store($request);
     }
 
     /**
@@ -65,23 +64,19 @@ class BookReviewController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(BookReviewUpdateRequest $request, BookReview $bookReview)
+    public function update(BookReviewUpdateRequest $request, int $id)
     {
-        $bookReview->update($request->validated());
-        return new BookReviewResource($bookReview);
+        return $this->bookReviewService->update($request, $id);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  int $id
+     * @return json
      */
     public function destroy(int $id)
     {
-        $bookReview = BookReview::findOrFail($id);
-        $bookReview->delete();
-
-        return response()->json();
+        return $this->bookReviewService->destroy($id);
     }
 }

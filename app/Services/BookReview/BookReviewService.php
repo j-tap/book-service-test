@@ -13,9 +13,48 @@ use App\Http\Resources\BookReview\BookReviewResource;
 class BookReviewService
 {
     /**
-     * Returns elements array.
+     * store
      *
-     * @return array
+     * @param  Array $request
+     * @return BookReviewResource
+     */
+    public function store(Request $request)
+    {
+        $bookReview = new BookReview();
+
+        $bookReview->book_id = $request->input('book_id');
+        $bookReview->text = $request->input('text');
+        $bookReview->rating = $request->input('rating');
+
+        $bookReview->save();
+
+        return new BookReviewResource($bookReview);
+    }
+
+    /**
+     * update
+     *
+     * @param  Array $request
+     * @param  int $id
+     * @return BookReviewResource
+     */
+    public function update(Request $request, int $id)
+    {
+        $bookReview = BookReview::findOrFail($id);
+
+        $bookReview->text = $request->input('text');
+        $bookReview->rating = $request->input('rating');
+
+        $bookReview->save();
+
+        return new BookReviewResource($bookReview);
+    }
+
+    /**
+     * index
+     *
+     * @param  Request $request
+     * @return BookReviewCollection
      */
     public function index(Request $request)
     {
@@ -33,9 +72,29 @@ class BookReviewService
         return new BookReviewCollection($booksReview);
     }
 
-    public function show($id)
+    /**
+     * show
+     *
+     * @param  int $id
+     * @return BookReviewResource
+     */
+    public function show(int $id)
     {
         $bookReview = BookReview::findOrFail($id);
         return new BookReviewResource($bookReview);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     * @return json
+     */
+    public function destroy(int $id)
+    {
+        $bookReview = BookReview::findOrFail($id);
+        $bookReview->delete();
+
+        return response()->json();
     }
 }

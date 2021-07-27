@@ -13,9 +13,50 @@ use App\Http\Resources\Author\AuthorResource;
 class AuthorService
 {
     /**
+     * store
+     *
+     * @param  Array $request
+     * @return AuthorResource
+     */
+    public function store(Request $request)
+    {
+        $author = new Author();
+
+        $author->first_name = $request->input('first_name');
+        $author->last_name = $request->input('last_name');
+        $author->birthday = $request->input('birthday');
+        $author->description = $request->input('description');
+
+        $author->save();
+
+        return new AuthorResource($author);
+    }
+
+    /**
+     * update
+     *
+     * @param  Array $request
+     * @param  int $id
+     * @return AuthorResource
+     */
+    public function update(Request $request, int $id)
+    {
+        $author = Author::findOrFail($id);
+
+        $author->first_name = $request->input('first_name');
+        $author->last_name = $request->input('last_name');
+        $author->birthday = $request->input('birthday');
+        $author->description = $request->input('description');
+
+        $author->save();
+
+        return new AuthorResource($author);
+    }
+
+    /**
      * Returns elements array.
      *
-     * @return array
+     * @return AuthorCollection
      */
     public function index(Request $request)
     {
@@ -31,9 +72,29 @@ class AuthorService
         return new AuthorCollection($authors);
     }
 
+    /**
+     * show
+     *
+     * @param  mixed $id
+     * @return AuthorResource
+     */
     public function show($id)
     {
         $author = Author::findOrFail($id);
         return new AuthorResource($author);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     * @return json
+     */
+    public function destroy(int $id)
+    {
+        $author = Author::findOrFail($id);
+        $author->delete();
+
+        return response()->json();
     }
 }

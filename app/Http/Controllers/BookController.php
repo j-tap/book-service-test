@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\Book;
 use App\Services\Book\BookService;
 use App\Http\Requests\Book\BookStoreRequest;
 use App\Http\Requests\Book\BookUpdateRequest;
@@ -25,7 +24,7 @@ class BookController extends Controller
      * Display a listing of the resource.
      *
      * * @param  \Illuminate\Http\Request $request
-     * @return Book
+     * @return BookCollection
      */
     public function index(Request $request)
     {
