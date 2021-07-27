@@ -24,10 +24,9 @@ class BookUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            // TODO: проверять authors
-            // а если передали не айди, а текст/массив/etc? а если передали уже удаленного автора?
             'title' => ['required', 'max:100'],
             'pages_count' => ['required', 'integer', 'min:1'],
+            'authors' => ['nullable', 'integer', 'exists:authors,id'],
         ];
     }
 }
