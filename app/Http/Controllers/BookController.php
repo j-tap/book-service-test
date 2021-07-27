@@ -3,16 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 use App\Models\Book;
-
-use App\Http\Resources\Book\BookResource;
-
+use App\Services\Book\BookService;
 use App\Http\Requests\Book\BookStoreRequest;
 use App\Http\Requests\Book\BookUpdateRequest;
-
-use App\Services\Book\BookService;
 
 class BookController extends Controller
 {
@@ -29,6 +24,7 @@ class BookController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * * @param  \Illuminate\Http\Request $request
      * @return Book
      */
     public function index(Request $request)
@@ -44,21 +40,7 @@ class BookController extends Controller
      */
     public function store(BookStoreRequest $request)
     {
-        // TODO: посмотреть пример реализации
-        // почему весь этот функционал не в сервисе? зачем отправляешь на магию полученные значения из реквеста?
-        // давай пример. у тебя есть какая-то модель в которой строку могут менять и админы и пользователи.
-        // но так как ты всё отдаешь на откуп ларавель, пользователь зная какое поле передать в реквесте,
-        // то, сможет изменить это значения. например при редактировании себя и установив галочку is_admin.
-        // проще конкретно прописать $book->name = $request->get('name'); и т.д.
-        $book = Book::create($request->validated());
-
-        if ($request->has('authors'))
-        {
-            $authors = $request->input('authors');
-            $book->authors()->attach($authors);
-        }
-
-        return new BookResource($book);
+        return $this->bookService->store($request);
     }
 
     /**
@@ -67,7 +49,7 @@ class BookController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(int $id)
     {
         return $this->bookService->show($id);
     }
@@ -76,40 +58,24 @@ class BookController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  Book  $book
+     * @param  Request  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(BookUpdateRequest $request, Book $book)
+    public function update(BookUpdateRequest $request, int $id)
     {
-        $book->update($request->validated());
-
-        $book->authors()->detach();
-
-        if ($request->input('authors'))
-        {
-            $authors = $request->input('authors');
-            $book->authors()->attach($authors);
-        }
-
-        return new BookResource($book);
+        return $this->bookService->update($request, $id);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Book $book
+     * @param  int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(int $id)
     {
-        $book = Book::findOrFail($id);
-
-        DB::beginTransaction();
-        $book->authors()->detach();
-        $book->delete();
-        DB::commit();
-
-        return response()->json();
+        return $this->bookService->destroy($id);
     }
 
 }
