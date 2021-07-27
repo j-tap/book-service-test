@@ -57,7 +57,7 @@ class BookService
         $book->year = $request->input('year');
 
         DB::beginTransaction();
-        $book->update($request->validated());
+        $book->update($request);
         $book->authors()->detach();
         if ($request->input('authors'))
         {
