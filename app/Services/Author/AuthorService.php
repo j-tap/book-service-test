@@ -20,16 +20,19 @@ class AuthorService
      */
     public function store(Request $request)
     {
-        $author = new Author();
+        if (auth()->check())
+        {
+            $author = new Author();
 
-        $author->first_name = $request->input('first_name');
-        $author->last_name = $request->input('last_name');
-        $author->birthday = $request->input('birthday');
-        $author->description = $request->input('description');
+            $author->first_name = $request->input('first_name');
+            $author->last_name = $request->input('last_name');
+            $author->birthday = $request->input('birthday');
+            $author->description = $request->input('description');
 
-        $author->save();
+            $author->save();
 
-        return new AuthorResource($author);
+            return new AuthorResource($author);
+        }
     }
 
     /**

@@ -72,4 +72,18 @@
         `php artisan migrate:fresh`
         Миграция одной таблицы
         `php artisan make:migration create_autor_to_book_table`
+
+        Сидинг создание файла
+        `php artisan make:seeder UserSeeder`
+        Выполнение сидинга в базу
+        Ключ --class=UserSeeder позволит выполнить только определённый сид
+        `php artisan db:seed`
+        
+        Создание фабрики фейковых данных
+        Ключ --model=Post позволит создать и модель
+        `php artisan make:factory UserFactory`
+        
+        Обновление загрузчика (например, после появления новых классов)
+        `composer dump-autoload`
+        
 </details>

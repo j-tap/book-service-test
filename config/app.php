@@ -230,4 +230,9 @@ return [
 
     ],
 
+    'admin' => [
+        'email' => env('ADMIN_EMAIL', 'admin@email.com'),
+        'password' => env('ADMIN_PASSWORD', '123456'),
+    ],
+
 ];
