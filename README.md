@@ -42,6 +42,8 @@
 ### Запуск проекта для разработки
 - `composer install` установка зависимостей
 - `php artisan migrate` установка миграций в базу
+- `php artisan db:seed` установка необходимых данных
+- `php artisan db:seed --class=DemoSeeder` установка демонстрационных данных по желанию
 - `php artisan serve` запуск проекта
 - `php artisan test` запуск тестов
 
@@ -76,7 +78,7 @@
         Сидинг создание файла
         `php artisan make:seeder UserSeeder`
         Выполнение сидинга в базу
-        Ключ --class=UserSeeder позволит выполнить только определённый сид
+        Ключ --class=DemoSeeder позволит выполнить только определённый сид
         `php artisan db:seed`
         
         Создание фабрики фейковых данных

@@ -24,8 +24,7 @@ class BookReviewFactory extends Factory
     public function definition()
     {
         return [
-            // TODO: сделать несколько разных отзывов
-            'book_id' => Book::factory(),
+            'book_id' => null,
             // 'user_id' => User::factory(),
             'text' => $this->faker->paragraph(),
             'rating' => $this->faker->numberBetween(1, 5),
