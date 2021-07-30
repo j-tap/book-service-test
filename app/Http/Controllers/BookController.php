@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Http\Controllers\ApiController as ApiController;
 use App\Services\Book\BookService;
 use App\Http\Requests\Book\BookStoreRequest;
 use App\Http\Requests\Book\BookUpdateRequest;
 
-class BookController extends Controller
+class BookController extends ApiController
 {
     private $bookService;
 
@@ -28,7 +29,8 @@ class BookController extends Controller
      */
     public function index(Request $request)
     {
-        return $this->bookService->index($request);
+        $result = $this->bookService->index($request);
+        return $this->sendResponse($result);
     }
 
     /**
@@ -39,7 +41,8 @@ class BookController extends Controller
      */
     public function store(BookStoreRequest $request)
     {
-        return $this->bookService->store($request);
+        $result = $this->bookService->store($request);
+        return $this->sendResponse($result);
     }
 
     /**
@@ -50,7 +53,8 @@ class BookController extends Controller
      */
     public function show(int $id)
     {
-        return $this->bookService->show($id);
+        $result = $this->bookService->show($id);
+        return $this->sendResponse($result);
     }
 
     /**
@@ -63,7 +67,8 @@ class BookController extends Controller
      */
     public function update(BookUpdateRequest $request, int $id)
     {
-        return $this->bookService->update($request, $id);
+        $result = $this->bookService->update($request, $id);
+        return $this->sendResponse($result);
     }
 
     /**
@@ -74,7 +79,8 @@ class BookController extends Controller
      */
     public function destroy(int $id)
     {
-        return $this->bookService->destroy($id);
+        $result = $this->bookService->destroy($id);
+        return $this->sendResponse($result);
     }
 
 }

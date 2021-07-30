@@ -4,10 +4,10 @@
 // use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\BookReviewController;
 use App\Http\Controllers\AuthorController;
-use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,14 +24,17 @@ use App\Http\Controllers\AuthController;
 //     return $request->user();
 // });
 
+Route::post('/registration', [AuthController::class, 'registration']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/logout', [AuthController::class, 'logout']);
 
-Route::group(['prefix' => 'books'], function () {
+Route::group(['prefix' => 'books'], function ()
+{
     Route::apiResource('/reviews', BookReviewController::class);
 });
 
-Route::group(['prefix' => 'authors'], function () {
+Route::group(['prefix' => 'authors'], function ()
+{
     Route::get('/{author_id}/books', [BookController::class, 'index']);
 });
 
