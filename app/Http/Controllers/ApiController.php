@@ -15,12 +15,7 @@ class ApiController extends Controller
     public function sendResponse($response)
     {
         $code = 200;
-        $result = [
-            'status' => null,
-            'message' => null,
-            'data' => null,
-            'errors' => null,
-        ];
+        $result = [];
 
         try
         {
