@@ -5,12 +5,14 @@ namespace App\Services\Author;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
+// use Illuminate\Support\Facades\Auth;
+use App\Services\ControllerService as ControllerService;
 
 use App\Models\Author;
 use App\Http\Resources\Author\AuthorCollection;
 use App\Http\Resources\Author\AuthorResource;
 
-class AuthorService
+class AuthorService extends ControllerService
 {
     /**
      * store
@@ -20,16 +22,24 @@ class AuthorService
      */
     public function store(Request $request)
     {
-        $author = new Author();
+        $user = auth('sanctum')->user();
+        if ($user)
+        {
+            $author = new Author();
 
-        $author->first_name = $request->input('first_name');
-        $author->last_name = $request->input('last_name');
-        $author->birthday = $request->input('birthday');
-        $author->description = $request->input('description');
+            $author->first_name = $request->input('first_name');
+            $author->last_name = $request->input('last_name');
+            $author->birthday = $request->input('birthday');
+            $author->description = $request->input('description');
 
-        $author->save();
+            $author->save();
 
-        return new AuthorResource($author);
+            return new AuthorResource($author);
+        }
+        else
+        {
+            return response('Unauthorized', 401);
+        }
     }
 
     /**
@@ -41,16 +51,24 @@ class AuthorService
      */
     public function update(Request $request, int $id)
     {
-        $author = Author::findOrFail($id);
+        $user = auth('sanctum')->user();
+        if ($user)
+        {
+            $author = Author::findOrFail($id);
 
-        $author->first_name = $request->input('first_name');
-        $author->last_name = $request->input('last_name');
-        $author->birthday = $request->input('birthday');
-        $author->description = $request->input('description');
+            $author->first_name = $request->input('first_name');
+            $author->last_name = $request->input('last_name');
+            $author->birthday = $request->input('birthday');
+            $author->description = $request->input('description');
 
-        $author->save();
+            $author->save();
 
-        return new AuthorResource($author);
+            return new AuthorResource($author);
+        }
+        else
+        {
+            return response('Unauthorized', 401);
+        }
     }
 
     /**
@@ -95,6 +113,6 @@ class AuthorService
         $author = Author::findOrFail($id);
         $author->delete();
 
-        return response()->json();
+        return response('OK');
     }
 }

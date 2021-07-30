@@ -4,16 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\BookReview;
-
+use App\Http\Controllers\ApiController as ApiController;
 use App\Http\Requests\BookReview\BookReviewStoreRequest;
 use App\Http\Requests\BookReview\BookReviewUpdateRequest;
-
-use App\Http\Resources\BookReview\BookReviewResource;
-
 use App\Services\BookReview\BookReviewService;
 
-class BookReviewController extends Controller
+class BookReviewController extends ApiController
 {
     private $bookReviewService;
 
@@ -32,7 +28,8 @@ class BookReviewController extends Controller
      */
     public function index(Request $request)
     {
-        return $this->bookReviewService->index($request);
+        $result = $this->bookReviewService->index($request);
+        return $this->sendResponse($result);
     }
 
     /**
@@ -43,7 +40,8 @@ class BookReviewController extends Controller
      */
     public function store(BookReviewStoreRequest $request)
     {
-        return $this->bookReviewService->store($request);
+        $result = $this->bookReviewService->store($request);
+        return $this->sendResponse($result);
     }
 
     /**
@@ -54,7 +52,8 @@ class BookReviewController extends Controller
      */
     public function show($id)
     {
-        return $this->bookReviewService->show($id);
+        $result = $this->bookReviewService->show($id);
+        return $this->sendResponse($result);
     }
 
     /**
@@ -66,7 +65,8 @@ class BookReviewController extends Controller
      */
     public function update(BookReviewUpdateRequest $request, int $id)
     {
-        return $this->bookReviewService->update($request, $id);
+        $result = $this->bookReviewService->update($request, $id);
+        return $this->sendResponse($result);
     }
 
     /**
@@ -77,6 +77,7 @@ class BookReviewController extends Controller
      */
     public function destroy(int $id)
     {
-        return $this->bookReviewService->destroy($id);
+        $result = $this->bookReviewService->destroy($id);
+        return $this->sendResponse($result);
     }
 }

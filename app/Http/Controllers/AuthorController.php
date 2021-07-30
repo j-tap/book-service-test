@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Http\Controllers\ApiController as ApiController;
 use App\Http\Requests\Author\AuthorStoreRequest;
 use App\Http\Requests\Author\AuthorUpdateRequest;
 use App\Services\Author\AuthorService;
 
-class AuthorController extends Controller
+class AuthorController extends ApiController
 {
     private $authorService;
 
@@ -27,7 +28,8 @@ class AuthorController extends Controller
      */
     public function index(Request $request)
     {
-        return $this->authorService->index($request);
+        $result = $this->authorService->index($request);
+        return $this->sendResponse($result);
     }
 
     /**
@@ -38,7 +40,8 @@ class AuthorController extends Controller
      */
     public function store(AuthorStoreRequest $request)
     {
-        return $this->authorService->store($request);
+        $result = $this->authorService->store($request);
+        return $this->sendResponse($result);
     }
 
     /**
@@ -49,7 +52,8 @@ class AuthorController extends Controller
      */
     public function show($id)
     {
-        return $this->authorService->show($id);
+        $result = $this->authorService->show($id);
+        return $this->sendResponse($result);
     }
 
     /**
@@ -61,7 +65,8 @@ class AuthorController extends Controller
      */
     public function update(AuthorUpdateRequest $request, int $id)
     {
-        return $this->authorService->update($request, $id);
+        $result = $this->authorService->update($request, $id);
+        return $this->sendResponse($result);
     }
 
     /**
@@ -72,6 +77,7 @@ class AuthorController extends Controller
      */
     public function destroy(int $id)
     {
-        return $this->bookService->destroy($id);
+        $result = $this->bookService->destroy($id);
+        return $this->sendResponse($result);
     }
 }

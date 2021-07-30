@@ -4,13 +4,13 @@ namespace App\Services\BookReview;
 
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use App\Services\ControllerService as ControllerService;
 
 use App\Models\BookReview;
 use App\Http\Resources\BookReview\BookReviewCollection;
-
 use App\Http\Resources\BookReview\BookReviewResource;
 
-class BookReviewService
+class BookReviewService extends ControllerService
 {
     /**
      * store
@@ -40,14 +40,22 @@ class BookReviewService
      */
     public function update(Request $request, int $id)
     {
-        $bookReview = BookReview::findOrFail($id);
+        $user = auth('sanctum')->user();
+        if ($user)
+        {
+            $bookReview = BookReview::findOrFail($id);
 
-        $bookReview->text = $request->input('text');
-        $bookReview->rating = $request->input('rating');
+            $bookReview->text = $request->input('text');
+            $bookReview->rating = $request->input('rating');
 
-        $bookReview->save();
+            $bookReview->save();
 
-        return new BookReviewResource($bookReview);
+            return new BookReviewResource($bookReview);
+        }
+        else
+        {
+            return response('Unauthorized', 401);
+        }
     }
 
     /**
@@ -95,6 +103,6 @@ class BookReviewService
         $bookReview = BookReview::findOrFail($id);
         $bookReview->delete();
 
-        return response()->json();
+        return response('OK');
     }
 }
